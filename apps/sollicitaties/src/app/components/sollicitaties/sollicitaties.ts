@@ -5,7 +5,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { MatTableModule, MatTable } from '@angular/material/table';
+import { MatTableModule, MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +14,8 @@ import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Sollicitatie } from '../../../../models/sollicitatie.interface';
-import { SollicitatiesDataSource } from './sollicitaties-datasource';
+import { StorageService } from '../../services/StorageService';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-sollicitaties',
@@ -23,7 +24,7 @@ import { SollicitatiesDataSource } from './sollicitaties-datasource';
     MatPaginatorModule,
     MatSortModule,
     MatButtonModule,
-    MatIconModule,
+    MatIconModule
   ],
   templateUrl: './sollicitaties.html',
   styleUrls: ['./sollicitaties.scss'],
@@ -36,21 +37,24 @@ export class Sollicitaties {
   @ViewChild(MatSort) sort?: MatSort;
   @ViewChild(MatTable) table?: MatTable<Sollicitatie>;
 
-  protected dataSource = new SollicitatiesDataSource();
+  protected dataSource = new MatTableDataSource<Sollicitatie>();
   private router = inject(Router);
+  private storageService = inject(StorageService);
+  protected sollicitaties$!: Observable<Sollicitatie[]>
+  
+  ngOnInit(){
+    this.sollicitaties$ = this.storageService.getSollicitaties()
+  }
 
   ngAfterViewInit(): void {
-    // Set up the data source with paginator and sort before connecting
-    // Note: MatSort should be available since matSort directive is on the table
-    if (this.paginator) {
+    if(this.paginator) {
       this.dataSource.paginator = this.paginator;
     }
-    if (this.sort) {
+    if(this.sort) {
       this.dataSource.sort = this.sort;
     }
-    if (this.table && this.paginator) {
-      this.table.dataSource = this.dataSource;
-    }
+
+    this.sollicitaties$.subscribe(data => this.dataSource.data = data)
   }
 
   getLimitedSentences(text: string): string {

@@ -5,7 +5,7 @@
           <!-- Datum Column -->
         <ng-container matColumnDef="datum">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> DATUM </th>
-          <td mat-cell *matCellDef="let element"> {{element.datum}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.datum.toDate() | date:'fullDate' }} </td>
         </ng-container>
       
         <!-- Bedrijf Column -->
@@ -23,7 +23,7 @@
         <!-- Sluitingsdatum Column -->
         <ng-container matColumnDef="sluitingsdatum">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> SLUITINGSDATUM </th>
-          <td mat-cell *matCellDef="let element"> {{element.sluitingsdatum}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.sluitingsdatum.toDate() | date:'fullDate'}} </td>
         </ng-container>
       
         <!-- Sollicitatie Column -->

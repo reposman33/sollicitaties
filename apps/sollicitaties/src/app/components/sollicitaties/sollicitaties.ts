@@ -16,10 +16,12 @@ import { MatSort } from '@angular/material/sort';
 import { Sollicitatie } from '../../../../models/sollicitatie.interface';
 import { StorageService } from '../../services/StorageService';
 import { Observable, tap } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-sollicitaties',
   imports: [
+    DatePipe,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
@@ -58,13 +60,11 @@ export class Sollicitaties {
   }
 
   getLimitedSentences(text: string): string {
-    if (!text) return '';
-    const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
-    return this.getEllipsedString(sentences.slice(0, 2).join('').trim(), text, '...');
-  }
-
-  getEllipsedString(truncatedString: string, orgString: string, suffix: string): string {
-    return orgString.length > truncatedString.length ? truncatedString + suffix : orgString;
+    if (!text.length) {
+      return ''
+    };
+    const truncatedText = text.substring(0,55);
+    return truncatedText < text ? truncatedText + '...' : text;
   }
 
   addNewSollicitatie(): void {

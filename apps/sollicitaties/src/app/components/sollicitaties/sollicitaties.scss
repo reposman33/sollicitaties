@@ -27,6 +27,31 @@ table[mat-table] {
 
     & [mat-cell] {
       border: none;
+      color: white;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      & span.accepted {
+        color: vars.$status-accepted-color;
+      }
+      & span.pending {
+        color: vars.$status-pending-color;
+      }
+      & span.rejected {
+        color: vars.$status-rejected-color;
+      }
+
+      &:nth-child(odd) {
+        background-color: vars.$cell-odd-bg-color;
+
+      &:hover {
+        background-color: vars.$cell-odd-hover-bg-color;
+        border-radius: vars.$border-radius-cell;
+      }
+
+      }
 
       &:nth-child(even) {
         background-color: vars.$cell-bg-color;

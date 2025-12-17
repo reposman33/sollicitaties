@@ -1,46 +1,10 @@
 import { DataSource } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { map } from 'rxjs/operators';
-import { Observable, of as observableOf, merge, EMPTY } from 'rxjs';
+import { map, startWith, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, Observable, merge, of } from 'rxjs';
 import { Sollicitatie } from '../../../../models/sollicitatie.interface';
 
-
-// TODO: replace this with real data from your application
-const EXAMPLE_DATA: Sollicitatie[] = [
-      {
-      datum: '2024-01-15',
-      bedrijf: 'Tech Solutions',
-      functie: 'Software Engineer',
-      sluitingsdatum: '2024-02-01',
-      sollicitatie: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda molestias nisi dolore, hic necessitatibus quae sit. Repudiandae deleniti rem ad minima voluptatum assumenda nesciunt reiciendis consectetur voluptas perspiciatis! Atque, unde.',
-      status: 'pending'
-    },
-    {
-      datum: '2024-01-20',
-      bedrijf: 'Innovatech',
-      functie: 'Frontend Developer',
-      sluitingsdatum: '2024-02-10',
-      sollicitatie: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda molestias nisi dolore, hic necessitatibus quae sit. Repudiandae deleniti rem ad minima voluptatum assumenda nesciunt reiciendis consectetur voluptas perspiciatis! Atque, unde.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda molestias nisi dolore, hic necessitatibus quae sit. Repudiandae deleniti rem ad minima voluptatum assumenda nesciunt reiciendis consectetur voluptas perspiciatis! Atque, unde.',
-      status: 'accepted'
-    },
-    {
-      datum: '2024-01-25',
-      bedrijf: 'WebWorks',
-      functie: 'UI/UX Designer',
-      sluitingsdatum: '2024-02-15',
-      sollicitatie: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda molestias nisi dolore, hic necessitatibus quae sit. Repudiandae deleniti rem ad minima voluptatum assumenda nesciunt reiciendis consectetur voluptas perspiciatis! Atque, unde.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda molestias nisi dolore, hic necessitatibus quae sit. Repudiandae deleniti rem ad minima voluptatum assumenda nesciunt reiciendis consectetur voluptas perspiciatis! Atque, unde.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda molestias nisi dolore, hic necessitatibus quae sit. Repudiandae deleniti rem ad minima voluptatum assumenda nesciunt reiciendis consectetur voluptas perspiciatis! Atque, unde.',
-      status: 'rejected'
-    },
-    { 
-      datum: '2024-02-01',
-      bedrijf: 'DataCorp',
-      functie: 'Data Analyst',
-      sluitingsdatum: '2024-02-20',
-      sollicitatie: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda molestias nisi dolore, hic necessitatibus quae sit. Repudiandae deleniti rem ad minima voluptatum assumenda nesciunt reiciendis consectetur voluptas perspiciatis! Atque, unde.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda molestias nisi dolore, hic necessitatibus quae sit. Repudiandae deleniti rem ad minima voluptatum assumenda nesciunt reiciendis consectetur voluptas perspiciatis! Atque, unde.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda molestias nisi dolore, hic necessitatibus quae sit. Repudiandae deleniti rem ad minima voluptatum assumenda nesciunt reiciendis consectetur voluptas perspiciatis! Atque, unde.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda molestias nisi dolore, hic necessitatibus quae sit. Repudiandae deleniti rem ad minima voluptatum assumenda nesciunt reiciendis consectetur voluptas perspiciatis! Atque, unde.',
-      status: 'pending'
-    }
-];
 
 /**
  * Data source for the Sollicitaties2 view. This class should
@@ -48,11 +12,13 @@ const EXAMPLE_DATA: Sollicitatie[] = [
  * (including sorting, pagination, and filtering).
  */
 export class SollicitatiesDataSource extends DataSource<Sollicitatie> {
-  data: Sollicitatie[] = EXAMPLE_DATA;
-  paginator: MatPaginator | undefined;
-  sort: MatSort | undefined;
-
-  constructor() {
+  public length = 0;
+  
+  constructor(
+    public sollicitaties$: Observable<Sollicitatie[]>,
+    public sort: MatSort = null!,
+    public paginator: MatPaginator = null!
+  ) {
     super();
   }
 
@@ -62,25 +28,20 @@ export class SollicitatiesDataSource extends DataSource<Sollicitatie> {
    * @returns A stream of the items to be rendered.
    */
   connect(): Observable<Sollicitatie[]> {
-    // If paginator is not set yet, return initial data
-    if (!this.paginator) {
-      return observableOf(this.data);
-    }
-    
-    // Create an array of observables to merge
-    const dataMutations: Observable<any>[] = [observableOf(this.data), this.paginator.page];
-    
-    // Add sort changes if sort is available
-    if (this.sort) {
-      dataMutations.push(this.sort.sortChange);
-    }
 
-    // Combine everything that affects the rendered data into one update
-    // stream for the data-table to consume.
-    return merge(...dataMutations)
-      .pipe(map(() => {
-        return this.getPagedData(this.getSortedData([...this.data]));
-      }));
+    return merge(
+      this.sollicitaties$,
+      this.paginator?.page && of({}),
+      this.sort?.sortChange && of({}),
+    )
+    .pipe(
+      startWith(null),
+        switchMap(() => this.sollicitaties$),
+        map(data => this.getSortedData(data)),
+        map(data => this.getPagedData(data)),
+        tap(data => this.length = data.length),
+        tap(data => console.log('Firestore data: ', data))
+      );
   }
 
   /**

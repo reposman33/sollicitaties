@@ -46,7 +46,6 @@
             [class.rejected]="element.status === 'rejected'">{{element.status }}</span> </td>
         </ng-container>
 
-      
         <tr mat-header-row *matHeaderRowDef="['datum', 'bedrijf', 'functie', 'sluitingsdatum', 'sollicitatie', 'status']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['datum', 'bedrijf', 'functie', 'sluitingsdatum', 'sollicitatie', 'status'];" (click)="toonSollicitatie(row.id)"></tr>
       </table>
@@ -59,7 +58,7 @@
       </mat-paginator>
     </div>
 
-    <button mat-fab class="fab-button flex flex-col self-end" (click)="addNewSollicitatie()" title="Nieuwe sollicitatie toevoegen">
+    <button mat-fab class="fab-button flex flex-col self-end" (click)="activateRoute('/add-sollicitatie')" title="Nieuwe sollicitatie toevoegen">
       <mat-icon class="flex flex-col">add</mat-icon>
     </button>
   </div>

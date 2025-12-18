@@ -73,7 +73,7 @@ export class AddSollicitatieComponent implements OnInit {
       console.log('Form Value:', this.form.value);
       // TODO: Implement submission logic (e.g., add to datasource)
       this.storageService.addSollicitatie(this.form.value)
-      this.form.reset({ status: 'pending' });
+      this.activateRoute('sollicitaties')
     }
   }
 
@@ -81,7 +81,7 @@ export class AddSollicitatieComponent implements OnInit {
     this.form.reset({ status: 'pending' });
   }
 
-    activateRoute(route: string): void {
+  activateRoute(route: string): void {
     this.router.navigate([route]);
   }
 

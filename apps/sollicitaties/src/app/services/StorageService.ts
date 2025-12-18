@@ -8,7 +8,8 @@ import {
   updateDoc,
   getDoc,
   setDoc,
-  CollectionReference
+  CollectionReference,
+  DocumentData
 } from '@angular/fire/firestore';
 import { Sollicitatie } from '../../../models/sollicitatie.interface';
 // Import the functions you need from the SDKs you need
@@ -18,16 +19,12 @@ import { from, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class StorageService {
-  readonly sollicitaties$: Observable<any[]>;
+  readonly sollicitaties$: Observable<(DocumentData | (DocumentData & { id: string; }))[]>;
+  private sollicitatiesRef!: CollectionReference;
 
   constructor(private firestore: Firestore) {
     const ref = collection(this.firestore, 'sollicitaties');
     this.sollicitaties$ = collectionData(ref, { idField: 'id' });
-  }
-  private sollicitatiesRef!: CollectionReference;
-
-  ngOnInit() {
-    this.sollicitatiesRef = collection(this.firestore, 'sollicitaties');
   }
 
   // // Voeg een nieuwe sollicitatie toe

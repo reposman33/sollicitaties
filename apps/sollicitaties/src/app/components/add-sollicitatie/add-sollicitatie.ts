@@ -7,9 +7,11 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { StorageService } from '../../services/StorageService';
+import { Sollicitatie } from '../../../../models/sollicitatie.interface';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-add-sollicitatie',
@@ -31,25 +33,39 @@ import { StorageService } from '../../services/StorageService';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddSollicitatieComponent implements OnInit {
+  private cdr = inject(ChangeDetectorRef);
+  private datePipe = new DatePipe('nl-NL');
   protected form!: FormGroup;
-
+  private id: string | null = null;
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
   private storageService = inject(StorageService);
 
   ngOnInit(): void {
     this.initializeForm();
+    this.id = this.activatedRoute.snapshot.paramMap.get('id')
+    if(this.id) {
+      this.updateForm(this.id);
+    }
   }
   
-  initializeForm(): void {
+  initializeForm(sollicitatie: Sollicitatie | null = null): void {
     this.form = this.fb.group({
-      datum: ['', Validators.required],
-      bedrijf: ['', Validators.required],
-      functie: ['', Validators.required],
-      sluitingsdatum: ['', Validators.required],
-      sollicitatie: ['', Validators.required],
-      status: ['pending', Validators.required],
+      datum: [sollicitatie ? this.convertFirestoreTimestamp(sollicitatie.datum) : '', Validators.required],
+      bedrijf: [sollicitatie?.bedrijf || '', Validators.required],
+      functie: [sollicitatie?.functie || '', Validators.required],
+      sluitingsdatum: [sollicitatie ? this.convertFirestoreTimestamp(sollicitatie.sluitingsdatum) : '', Validators.required],
+      sollicitatie: [sollicitatie?.sollicitatie || '', Validators.required],
+      status: [sollicitatie?.status || 'pending', Validators.required],
     });
+ 
+    this.cdr.markForCheck();
+  }
+
+  async updateForm(id: string) {
+    this.storageService.getSollicitatie(id)
+    .subscribe(sollicitaties => this.initializeForm(sollicitaties));
   }
 
   onSubmit(): void {

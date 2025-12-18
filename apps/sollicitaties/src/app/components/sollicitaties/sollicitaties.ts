@@ -15,7 +15,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Sollicitatie } from '../../../../models/sollicitatie.interface';
 import { StorageService } from '../../services/StorageService';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -67,7 +67,15 @@ export class Sollicitaties {
     return truncatedText < text ? truncatedText + '...' : text;
   }
 
-  addNewSollicitatie(): void {
-    this.router.navigate(['/add-sollicitatie']);
+  toonSollicitatie(id: string) {    
+    this.activateRoute('/add-sollicitatie', id)
+  }
+
+  activateRoute(route: string, id: string | null = null): void {
+    if(id) {
+      this.router.navigate([route,id]);
+    } else {
+      this.router.navigate([route]);
+    }
   }
 }

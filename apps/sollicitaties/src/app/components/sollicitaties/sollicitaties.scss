@@ -3,6 +3,7 @@
 table[mat-table] {
   border-collapse: separate;
   border-spacing: 0 8px;
+  padding: 0 vars.$table-x-padding;
 
   [mat-header-cell] {
     border: none;
@@ -15,15 +16,8 @@ table[mat-table] {
   [mat-row] {
     border-radius: vars.$border-radius-cell-row-end;
     border: 1px solid #ccc;
-    background-color: vars.$row-bg-color;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    cursor: pointer;
-
-    &:hover {
-      background-color: vars.$cell-bg-color;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
 
     & [mat-cell] {
       border: none;
@@ -54,12 +48,13 @@ table[mat-table] {
       }
 
       &:nth-child(even) {
-        background-color: vars.$cell-bg-color;
+        background-color: vars.$cell-even-bg-color;
       }
 
       &:hover {
-        background-color: vars.$cell-hover-bg-color;
+        background-color: vars.$cell-even-hover-bg-color;
         border-radius: vars.$border-radius-cell;
+        color: #1a2222;
       }
 
       &:first-of-type {
@@ -69,7 +64,7 @@ table[mat-table] {
         padding: 16px;
 
         &:hover {
-          background-color: vars.$cell-hover-bg-color;
+          background-color: vars.$cell-odd-hover-bg-color;
           border-top-left-radius: vars.$border-radius-cell-row-end;
           border-bottom-left-radius: vars.$border-radius-cell-row-end;
         }
@@ -82,7 +77,7 @@ table[mat-table] {
         padding: 16px;
 
         &:hover {
-          background-color: vars.$cell-hover-bg-color;
+          background-color: vars.$cell-even-hover-bg-color;
           border-top-right-radius: vars.$border-radius-cell-row-end;
           border-bottom-right-radius: vars.$border-radius-cell-row-end;
         }

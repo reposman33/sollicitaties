@@ -1,6 +1,7 @@
-import { Component, inject, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation, ChangeDetectionStrategy, ChangeDetectorRef,LOCALE_ID } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
+import localeNl from '@angular/common/locales/nl';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -13,6 +14,7 @@ import { StorageService } from '../../services/StorageService';
 import { Sollicitatie } from '../../../../models/sollicitatie.interface';
 import { Timestamp } from '@angular/fire/firestore';
 
+registerLocaleData(localeNl);
 @Component({
   selector: 'app-add-sollicitatie',
   standalone: true,
@@ -31,6 +33,7 @@ import { Timestamp } from '@angular/fire/firestore';
   styleUrls: ['./add-sollicitatie.scss'],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: LOCALE_ID, useValue: 'nl-NL'}]
 })
 export class AddSollicitatieComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
@@ -70,8 +73,6 @@ export class AddSollicitatieComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
-      console.log('Form Value:', this.form.value);
-      // TODO: Implement submission logic (e.g., add to datasource)
       this.storageService.addSollicitatie(this.form.value)
       this.activateRoute('sollicitaties')
     }
@@ -83,6 +84,14 @@ export class AddSollicitatieComponent implements OnInit {
 
   activateRoute(route: string): void {
     this.router.navigate([route]);
+  }
+
+  convertFirestoreTimestamp(timestamp: any): string {
+    // Cast naar Timestamp
+    const firestoreTimestamp = timestamp as Timestamp;
+    const date = firestoreTimestamp.toDate();  // Je kunt nu veilig de toDate() methode aanroepen
+    // return date.toISOString().split('T')[0];
+    return this.datePipe.transform(date, 'yyyy-MM-dd', undefined, 'nl-NL') || '';
   }
 
 }

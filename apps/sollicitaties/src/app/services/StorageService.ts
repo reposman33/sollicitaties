@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {
   Firestore,
   collection,
-  collectionData,
   doc,
   deleteDoc,
   updateDoc,
@@ -67,7 +66,7 @@ export class StorageService {
   }
 
   // Haal een specifieke sollicitatie op
-  getSollicitatie(id: string): Observable<Sollicitatie> {
+  getSollicitatieById(id: string): Observable<Sollicitatie> {
     const sollicitatieRef = doc(this.firestore, `sollicitaties/${id}`);
     return from(
       getDoc(sollicitatieRef).then(docSnap => {

@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { StorageService } from '../../services/StorageService';
 import { Sollicitatie } from '../../../../models/sollicitatie.interface';
 import { Timestamp } from '@angular/fire/firestore';
+import { AuthService } from '../../services/auth-service';
 
 registerLocaleData(localeNl);
 @Component({
@@ -74,6 +75,8 @@ export class AddSollicitatieComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
+      // sla de userId op bij de sollicitatie
+      this.form.value.userId = this.authService.userId;
       this.storageService.addSollicitatie(this.form.value)
       this.activateRoute('sollicitaties')
     }

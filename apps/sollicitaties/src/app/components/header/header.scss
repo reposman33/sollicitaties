@@ -1,0 +1,14 @@
+@use "../../_variables" as vars;
+
+:host {
+  @apply w-full flex flex-col items-center;
+}
+
+.header {
+  @apply relative flex items-center justify-center w-4/5 h-16 p-4 mb-8 rounded-lg;
+  background-color: vars.$container-bg-color;
+
+  & button {
+    @apply absolute right-4 bg-white
+  }
+}

@@ -24,13 +24,17 @@ public get userId(): string | null {
   }
   
   readonly user$: Observable<User | null> = authState(this.auth);
+  readonly isAuthenticated$ = authState(this.auth).pipe(
+    map(user => !!user)
+  );
 
   async signInWithGoogle() {
     return signInWithPopup(this.auth, new GoogleAuthProvider());
   }
   
   async signOut() {
-    return this.auth.signOut();
+    await this.auth.signOut();
+    await this.router.navigate(['/login']);
   }
 
   async signInWithEmail(email: string, password: string) {

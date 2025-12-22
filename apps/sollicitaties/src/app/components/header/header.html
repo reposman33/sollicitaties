@@ -1,0 +1,8 @@
+<div class="header">
+  <h1>Sollicitaties</h1>
+
+  @if(authService.isAuthenticated$ | async) {
+    <button mat-button (click)="signOut()">Log uit</button>
+  }
+</div>
+

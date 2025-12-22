@@ -1,13 +1,9 @@
 @use "./__variables" as vars;
 
-.header {
-  @apply h-16 w-4/5 bg-gray-100 p-4 mb-8 rounded-lg shadow-lg flex items-center justify-center;
+.container {
+  @apply flex-[4] w-4/5 bg-gray-50 p-4 mb-4 rounded-lg;
 }
 
 .container {
-  @apply flex-[4] w-4/5 bg-gray-50 p-4 mb-4 rounded-lg shadow-lg;
-}
-
-.header,.container {
   background-color: vars.$container-bg-color;
 }

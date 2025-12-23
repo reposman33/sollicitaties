@@ -1,15 +1,21 @@
-import { Component, inject, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation, ChangeDetectionStrategy, ChangeDetectorRef,LOCALE_ID } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
+import localeNl from '@angular/common/locales/nl';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { StorageService } from '../../services/StorageService';
+import { Sollicitatie } from '../../../../models/sollicitatie.interface';
+import { Timestamp } from '@angular/fire/firestore';
+import { AuthService } from '../../services/auth-service';
 
+registerLocaleData(localeNl);
 @Component({
   selector: 'app-add-sollicitatie',
   standalone: true,
@@ -28,33 +34,57 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./add-sollicitatie.scss'],
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{provide: LOCALE_ID, useValue: 'nl-NL'}]
 })
 export class AddSollicitatieComponent implements OnInit {
+  private cdr = inject(ChangeDetectorRef);
+  private datePipe = new DatePipe('nl-NL');
   protected form!: FormGroup;
-
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+  private storageService = inject(StorageService);
+  private authService = inject(AuthService)
 
   ngOnInit(): void {
     this.initializeForm();
+    const id = this.activatedRoute.snapshot.paramMap.get('id')
+    if(id) {
+      this.updateForm(id);
+    }
   }
   
-  initializeForm(): void {
-    this.form = this.fb.group({
-      datum: ['', Validators.required],
-      bedrijf: ['', Validators.required],
-      functie: ['', Validators.required],
-      sluitingsdatum: ['', Validators.required],
-      sollicitatie: ['', Validators.required],
-      status: ['pending', Validators.required],
+  initializeForm(sollicitatie: Sollicitatie | null = null, id = ''): void {
+   this.form = this.fb.group({
+      datum: [{value: sollicitatie ? this.convertFirestoreTimestamp(sollicitatie.datum) : '', disabled: id.length > 0}, [Validators.required]],
+      functie: [{value: sollicitatie?.functie || '', disabled: id.length > 0}, [Validators.required]],
+      bedrijf: [{value: sollicitatie?.bedrijf || '', disabled: id.length > 0}, [Validators.required]],
+      sluitingsdatum: [{value: sollicitatie ? this.convertFirestoreTimestamp(sollicitatie.sluitingsdatum) : '', disabled: id.length > 0}, [Validators.required]],
+      sollicitatie: [{value: sollicitatie?.sollicitatie || '', disabled: id.length > 0}, [Validators.required]],
+      status: [ sollicitatie?.status ?? 'pending', [Validators.required], ],
+      id: [id || ''],
     });
+    
+    this.cdr.markForCheck();
+  }
+
+  async updateForm(id: string) {
+    this.storageService.getSollicitatieById(id)
+    .subscribe(sollicitaties => this.initializeForm(sollicitaties, id));
   }
 
   onSubmit(): void {
     if (this.form.valid) {
-      console.log('Form Value:', this.form.value);
-      // TODO: Implement submission logic (e.g., add to datasource)
-      this.form.reset({ status: 'pending' });
+      if(this.form.value.id) {
+        // update bestaande sollicitatie
+        this.storageService.updateSollicitatie(this.form.value.id, this.form.value)
+        this.activateRoute('sollicitaties')
+        return;
+      }
+      // toevoegen nieuwe sollicitatie
+      this.form.value.userId = this.authService.userId;
+      this.storageService.addSollicitatie(this.form.value)
+      this.activateRoute('sollicitaties')
     }
   }
 
@@ -62,8 +92,16 @@ export class AddSollicitatieComponent implements OnInit {
     this.form.reset({ status: 'pending' });
   }
 
-    activateRoute(route: string): void {
+  activateRoute(route: string): void {
     this.router.navigate([route]);
+  }
+
+  convertFirestoreTimestamp(timestamp: string): string {
+    // Cast naar Timestamp
+    const firestoreTimestamp = timestamp as unknown as Timestamp;
+    const date = firestoreTimestamp.toDate();  // Je kunt nu veilig de toDate() methode aanroepen
+    // return date.toISOString().split('T')[0];
+    return this.datePipe.transform(date, 'yyyy-MM-dd', undefined, 'nl-NL') || '';
   }
 
 }

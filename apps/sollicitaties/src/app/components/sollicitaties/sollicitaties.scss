@@ -3,72 +3,100 @@
 table[mat-table] {
   border-collapse: separate;
   border-spacing: 0 8px;
-}
-[mat-header-cell] {
-  border: none;
-}
+  padding: 0 vars.$table-x-padding;
 
-[mat-header-cell]:last-of-type {
-  text-align: center;
-}
+  [mat-header-cell] {
+    border: none;
 
-[mat-row] {
-  border-radius: vars.$border-radius-cell-row-end;
-  border: 1px solid #ccc;
-  background-color: vars.$row-bg-color;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  cursor: pointer;
-
-  &:hover {
-    background-color: vars.$cell-bg-color;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-
-  & [mat-cell]:first-of-type {
-    border:none;
-    border-left: 1px solid #ccc;
-    border-radius: vars.$border-radius-cell-row-end;
-    padding: 16px;
-  }
-  & [mat-cell]:last-of-type {
-    border:none;
-    border-right: 1px solid #ccc;
-    border-radius: vars.$border-radius-cell-row-end;
-    padding: 16px;
-  }
-
-  & [mat-cell] {
-    // padding: 16px;
-
-    &:hover {
-      background-color: vars.$cell-hover-bg-color;
-      border-radius: vars.$border-radius-cell;
-    }
-    &[mat-cell]:first-of-type:hover {
-      background-color: vars.$cell-hover-bg-color;
-      border-top-left-radius: vars.$border-radius-cell-row-end;
-      border-bottom-left-radius: vars.$border-radius-cell-row-end;
-    }
-
-    &[mat-cell]:last-of-type:hover {
-      background-color: vars.$cell-hover-bg-color;
-      border-top-right-radius: vars.$border-radius-cell-row-end;
-      border-bottom-right-radius: vars.$border-radius-cell-row-end;
+    &:last-of-type {
+      text-align: center;
     }
 
   }
-  .sollicitatie-textarea {
-    display: block;
+  
+  &.fixed-table {
     width: 100%;
-    min-height: 30px;
-    max-height: 60px;
-    overflow-y: auto;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    line-height: 1.5;
-    font-size: 0.875rem;
+    table-layout: auto;
+  }
+
+  [mat-row] {
+    border-radius: vars.$border-radius-cell-row-end;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    & [mat-cell] {
+      border: none;
+      color: white;
+      padding: 0 1rem;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      & span.accepted {
+        color: vars.$status-accepted-color;
+      }
+      & span.pending {
+        color: vars.$status-pending-color;
+      }
+      & span.rejected {
+        color: vars.$status-rejected-color;
+      }
+
+      &:nth-child(odd) {
+        background-color: vars.$cell-odd-bg-color;
+
+      &:hover {
+        background-color: vars.$cell-odd-hover-bg-color;
+        border-radius: vars.$border-radius-cell;
+      }
+
+      }
+
+      &:nth-child(even) {
+        background-color: vars.$cell-even-bg-color;
+      }
+
+      &:hover {
+        background-color: vars.$cell-even-hover-bg-color;
+        border-radius: vars.$border-radius-cell;
+        color: #1a2222;
+      }
+
+      &:first-of-type {
+        border-left: 1px solid #ccc;
+        border-top-left-radius: vars.$border-radius-cell-row-end;
+        border-bottom-left-radius: vars.$border-radius-cell-row-end;
+
+        &:hover {
+          background-color: vars.$cell-odd-hover-bg-color;
+          border-top-left-radius: vars.$border-radius-cell-row-end;
+          border-bottom-left-radius: vars.$border-radius-cell-row-end;
+        }
+      }
+      
+      &:last-of-type {
+        border-right: 1px solid #ccc;
+        border-top-right-radius: vars.$border-radius-cell-row-end;
+        border-bottom-right-radius: vars.$border-radius-cell-row-end;
+
+        &:hover {
+          background-color: vars.$cell-even-hover-bg-color;
+          border-top-right-radius: vars.$border-radius-cell-row-end;
+          border-bottom-right-radius: vars.$border-radius-cell-row-end;
+        }
+      }
+
+    }
+
+    .sollicitatie-textarea {
+      display: block;
+      width: 100%;
+      overflow-y: auto;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
   }
 }
-

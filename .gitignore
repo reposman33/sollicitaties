@@ -33,7 +33,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
-apps/shop/*/**
+**/firebase.config.ts
 
 # System Files
 .DS_Store

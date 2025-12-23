@@ -2,13 +2,13 @@
   "name": "sollicitaties",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
+  "sourceRoot": "apps/sollicitaties/src",
+  "prefix": "app",
   "generators": {
     "@schematics/angular:component": {
       "style": "scss"
     }
   },
-  "sourceRoot": "apps/sollicitaties/src",
-  "prefix": "app",
   "targets": {
     "build": {
       "executor": "@angular/build:application",
@@ -26,6 +26,7 @@
           }
         ],
         "styles": [
+          "node_modules/@angular/material/prebuilt-themes/azure-blue.css",
           "apps/sollicitaties/src/styles.scss"
         ]
       },
@@ -86,6 +87,12 @@
         "styles": [
           "apps/sollicitaties/src/styles.scss"
         ]
+      }
+    },
+    "deploy": {
+      "executor": "@nx-extend/firebase-hosting:deploy",
+      "options": {
+        "site": "sollicitaties"
       }
     }
   }

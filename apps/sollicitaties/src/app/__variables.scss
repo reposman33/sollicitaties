@@ -1,7 +1,18 @@
-$container-bg-color: #f3f4f6;
-$row-bg-color: #ffffff;
-$cell-bg-color: #ffffff;
-$cell-hover-bg-color: #ccc;
+@use "sass:color";
+
+$bg-color: #3b6dc4;
+$container-bg-color: #f5eab4;
+$row-bg-color: #c4923b;
+$cell-bg-color: #3d7bb8;
+$cell-odd-bg-color: $cell-bg-color;
+$cell-even-bg-color: color.scale($cell-bg-color, $lightness: 30%);
+$cell-odd-hover-bg-color: color.scale($cell-bg-color, $lightness: 60%);
+$cell-even-hover-bg-color: color.scale($cell-bg-color, $lightness: 60%);
+$status-accepted-color: green;
+$status-pending-color: orange;
+$status-rejected-color: grey;
+
+$table-x-padding: 2rem;
 $border-color: #d1d5db;
 $border-radius-cell: 5px;
 $border-radius-cell-row-end: 21px;

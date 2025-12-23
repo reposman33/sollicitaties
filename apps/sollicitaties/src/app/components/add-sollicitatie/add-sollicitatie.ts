@@ -54,7 +54,7 @@ export class AddSollicitatieComponent implements OnInit {
     }
   }
   
-  initializeForm(sollicitatie: Sollicitatie | null = null, id: string = ''): void {
+  initializeForm(sollicitatie: Sollicitatie | null = null, id = ''): void {
    this.form = this.fb.group({
       datum: [{value: sollicitatie ? this.convertFirestoreTimestamp(sollicitatie.datum) : '', disabled: id.length > 0}, [Validators.required]],
       functie: [{value: sollicitatie?.functie || '', disabled: id.length > 0}, [Validators.required]],
@@ -96,9 +96,9 @@ export class AddSollicitatieComponent implements OnInit {
     this.router.navigate([route]);
   }
 
-  convertFirestoreTimestamp(timestamp: any): string {
+  convertFirestoreTimestamp(timestamp: string): string {
     // Cast naar Timestamp
-    const firestoreTimestamp = timestamp as Timestamp;
+    const firestoreTimestamp = timestamp as unknown as Timestamp;
     const date = firestoreTimestamp.toDate();  // Je kunt nu veilig de toDate() methode aanroepen
     // return date.toISOString().split('T')[0];
     return this.datePipe.transform(date, 'yyyy-MM-dd', undefined, 'nl-NL') || '';

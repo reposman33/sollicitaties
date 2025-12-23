@@ -32,6 +32,10 @@ public get userId(): string | null {
     return signInWithPopup(this.auth, new GoogleAuthProvider());
   }
   
+  async signInWithGithub() {
+    return signInWithPopup(this.auth, new GithubAuthProvider());
+  }
+
   async signOut() {
     await this.auth.signOut();
     await this.router.navigate(['/login']);
@@ -45,8 +49,8 @@ public get userId(): string | null {
   return createUserWithEmailAndPassword(this.auth, email, password);
   }
 
-  async sendPasswordResetEmail(email: string) {
-    // Implement password reset email logic here
-  } 
+  // async sendPasswordResetEmail(email: string) {
+  //   // Implement password reset email logic here
+  // } 
 
 }

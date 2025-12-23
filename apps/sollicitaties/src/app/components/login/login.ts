@@ -27,6 +27,11 @@ export class Login {
     this.router.navigateByUrl('/sollicitaties');
   }
 
+  async loginWithGithub() {
+    await this.authService.signInWithGithub();
+    this.router.navigateByUrl('/sollicitaties');
+  }
+
   async registerWithEmail() {
     const { email, password } = this.form.value;
     if (email && password) {

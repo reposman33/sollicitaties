@@ -77,4 +77,16 @@ export class StorageService {
       })
     );
   }
+
+  getLocaties(): Promise<Pick<Sollicitatie, 'locatie'>[]> {
+    return this.getDocumentsOnce().then((sollicitaties: Sollicitatie[]): Pick<Sollicitatie, 'locatie'>[] => {
+      const locatiesSet = new Set<Pick<Sollicitatie, 'locatie'>>();
+      sollicitaties.forEach(sollicitatie => {
+        if (sollicitatie.locatie) {
+          locatiesSet.add(sollicitatie.locatie as unknown as Pick<Sollicitatie, 'locatie'>);
+        }
+      });
+      return Array.from(locatiesSet);
+    });
+  }
 }

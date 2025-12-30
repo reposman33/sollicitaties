@@ -2,6 +2,7 @@ import { Component, inject, OnInit, ViewEncapsulation, ChangeDetectionStrategy, 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
 import localeNl from '@angular/common/locales/nl';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -22,6 +23,7 @@ registerLocaleData(localeNl);
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
@@ -45,6 +47,8 @@ export class AddSollicitatieComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private storageService = inject(StorageService);
   private authService = inject(AuthService)
+  protected form!: FormGroup;
+  protected locatie$: Promise<Pick<Sollicitatie, 'locatie'>[]> = this.storageService.getLocaties();
 
   ngOnInit(): void {
     this.initializeForm();

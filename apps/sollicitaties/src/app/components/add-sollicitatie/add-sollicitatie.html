@@ -9,19 +9,6 @@
         <mat-datepicker-toggle matSuffix [for]="datumPicker"></mat-datepicker-toggle>
         <mat-datepicker #datumPicker></mat-datepicker>
       </mat-form-field>
-
-      <mat-form-field class="form-field">
-        <mat-label>Bedrijf</mat-label>
-        <input matInput formControlName="bedrijf" />
-      </mat-form-field>
-    </div>
-
-    <div class="form-row">
-      <mat-form-field class="form-field">
-        <mat-label>Functie</mat-label>
-        <input matInput formControlName="functie" />
-      </mat-form-field>
-
       <mat-form-field class="form-field">
         <mat-label>Sluitingsdatum</mat-label>
         <input matInput [matDatepicker]="sluitingsdatumPicker" formControlName="sluitingsdatum"/>
@@ -31,9 +18,41 @@
     </div>
 
     <div class="form-row">
+      <mat-form-field class="form-field">
+        <mat-label>Bedrijf</mat-label>
+        <input matInput formControlName="bedrijf" />
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Kies een locatie</mat-label>
+        <input matInput formControlName="locatie" [matAutocomplete]="auto" placeholder="...of type een nieuwe locatie"/>
+
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let locatie of (locatie$ | async)" [value]="locatie">
+            {{ locatie }}
+          </mat-option>
+        </mat-autocomplete>
+
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
       <mat-form-field class="form-field full-width">
-        <mat-label>Sollicitatie</mat-label>
-        <textarea matInput formControlName="sollicitatie" rows="5"></textarea>
+        <mat-label>Aanvraag</mat-label>
+        <textarea matInput formControlName="aanvraag" rows="5"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="form-field full-width">
+        <mat-label>Motivatie</mat-label>
+        <textarea matInput formControlName="motivatie" rows="5"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field class="form-field full-width">
+        <mat-label>Updates:</mat-label>
+        <textarea matInput formControlName="updates" rows="3"></textarea>
       </mat-form-field>
     </div>
 

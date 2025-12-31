@@ -58,9 +58,12 @@ export class Sollicitaties {
     }
     if(this.sort) {
       this.dataSource.sort = this.sort;
+      this.sort.sort({id: 'datum', start: 'desc', disableClear: true});
     }
 
-    this.sollicitaties$.then(data => this.dataSource.data = data)
+    this.sollicitaties$.then(data => {
+      this.dataSource.data = data;
+    })
   }
 
   getLimitedSentences(text: string): string {

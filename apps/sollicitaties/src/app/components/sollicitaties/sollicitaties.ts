@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  LOCALE_ID,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -16,7 +17,10 @@ import { MatSort } from '@angular/material/sort';
 import { Sollicitatie } from '../../../../models/sollicitatie.interface';
 import { StorageService } from '../../services/StorageService';
 import { DatePipe } from '@angular/common';
+import { registerLocaleData } from '@angular/common';
+import localeNl from '@angular/common/locales/nl';
 
+registerLocaleData(localeNl);
 @Component({
   selector: 'app-sollicitaties',
   imports: [
@@ -27,6 +31,7 @@ import { DatePipe } from '@angular/common';
     MatButtonModule,
     MatIconModule
   ],
+  providers: [ {provide: LOCALE_ID, useValue: 'nl-NL'} ],
   templateUrl: './sollicitaties.html',
   styleUrls: ['./sollicitaties.scss'],
   encapsulation: ViewEncapsulation.Emulated,

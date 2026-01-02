@@ -1,7 +1,8 @@
 const fs = require('fs');
+const path = require('path');
 
-// Het pad naar waar het bestand moet komen
-const targetPath = './apps/sollicitaties/src/app/environments/firebase.config.ts';
+// Pad vanaf de root naar je environments map
+const targetPath = path.join(__dirname, 'apps/sollicitaties/src/app/environments/firebase.config.ts');
 
 const envConfigFile = `export const firebaseConfig = {
   apiKey: '${process.env.API_KEY || ""}',
@@ -14,5 +15,17 @@ const envConfigFile = `export const firebaseConfig = {
 `;
 
 console.log('Genereren van Firebase config...');
-fs.writeFileSync(targetPath, envConfigFile);
-console.log(`Bestand aangemaakt op: ${targetPath}`);
+
+// Zorg dat de map bestaat
+const dir = path.dirname(targetPath);
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir, { recursive: true });
+}
+
+try {
+    fs.writeFileSync(targetPath, envConfigFile);
+    console.log(`✅ Bestand succesvol aangemaakt op: ${targetPath}`);
+} catch (err) {
+    console.error('❌ Fout bij aanmaken bestand:', err);
+    process.exit(1);
+}

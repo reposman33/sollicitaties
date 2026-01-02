@@ -136,5 +136,12 @@
       "viewEncapsulation": "Emulated"
     }
   },
-  "nxCloudId": "693837be3f319e4d635316d6"
+ "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "test", "lint", "e2e"]
+      }
+    }
+  }
 }

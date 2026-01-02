@@ -22,7 +22,6 @@ if (!fs.existsSync(dir)){
     fs.mkdirSync(dir, { recursive: true });
 }
 
-
 // DEBUG LOGS (veilig)
 console.log('--- Omgevingsvariabelen Check ---');
 const key = process.env.API_KEY || "";

@@ -1,6 +1,6 @@
 export const environment = {
   firebase: {
-    apiKey: (import.meta as any).env.apiKey, // Voor Vite/Analog
+    apiKey: (import.meta as any).env.apiKey,
     authDomain: (import.meta as any).env.authDomain,
     projectId: (import.meta as any).env.projectId,
     storageBucket: (import.meta as any).env.storageBucket,

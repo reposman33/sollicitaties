@@ -1,15 +1,18 @@
 <div class="header">
-  <div class="header-section left"></div>
+  <div></div>
 
-  <div class="header-section center">
+  <div [ngClass]="{
+    'header-section': true,
+    'align-right': (authService.isAuthenticated$ | async),
+    'align-center': !(authService.isAuthenticated$ | async)}">
     <h1>Sollicitaties</h1>
   </div>
 
-  @if(authService.isAuthenticated$ | async) {
-    <div class="header-section right">
+  <div class="header-section right">
+    @if(authService.isAuthenticated$ | async) {
       <span>Laatste login: {{ (lastLogin$ | async) | date:'EEEE d MMMM y HH:MM:ss' }}</span>
       <button mat-flat-button (click)="signOut()">Log uit</button>
+    }
     </div>
-  }
 </div>
 

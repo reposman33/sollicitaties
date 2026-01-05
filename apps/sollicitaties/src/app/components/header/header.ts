@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../services/auth-service';
-import { AsyncPipe, DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [ AsyncPipe, MatButtonModule, DatePipe ],
+  imports: [ AsyncPipe, CommonModule, DatePipe, MatButtonModule ],
   templateUrl: './header.html',
   styleUrl: './header.scss',
   encapsulation: ViewEncapsulation.Emulated,

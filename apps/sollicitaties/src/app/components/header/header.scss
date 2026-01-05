@@ -12,20 +12,21 @@
     @apply flex items-center;
 
     &.left {
-      @apply justify-start;
     }
 
-    &.center {
-      @apply flex-1 justify-end;
+    &.align-center {
+      @apply justify-center ml-2;;
+    }
+
+    &.align-right {
+      @apply justify-end flex-1 pr-3;
     }
 
     &.right {
-      @apply justify-end pr-3 ml-4;
 
       & span {
-        @apply mr-4 text-sm text-gray-600 !important;
-      }
-
+        @apply mr-4 text-sm text-gray-600;    
+      }      
     }
   }
 }
